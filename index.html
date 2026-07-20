@@ -8,23 +8,57 @@
       name="description"
       content="Niranjan's professional portfolio featuring background, CV, and projects."
     />
+
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="assets/favicon-512.png" />
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Niranjan Arun Rao | Portfolio" />
+    <meta
+      property="og:description"
+      content="Niranjan's professional portfolio featuring background, CV, and projects."
+    />
+    <meta property="og:url" content="https://niranjanrao13.github.io/" />
+    <meta property="og:image" content="https://niranjanrao13.github.io/assets/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Niranjan Arun Rao | Portfolio" />
+    <meta
+      name="twitter:description"
+      content="Niranjan's professional portfolio featuring background, CV, and projects."
+    />
+    <meta name="twitter:image" content="https://niranjanrao13.github.io/assets/og-image.png" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Newsreader:opsz,wght@6..72,500;6..72,700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
-        --bg: #f4f7fb;
-        --panel: #ffffff;
-        --ink: #10212f;
-        --muted: #516271;
-        --line: #d8e1e8;
-        --accent: #0a8f9a;
-        --accent-soft: #e5f7f8;
-        --navy: #0e2f44;
-        --shadow: 0 18px 40px rgba(16, 33, 47, 0.1);
+        color-scheme: light dark;
+        --bg: #f7f3ec;
+        --ink: #23201b;
+        --muted: #6f6659;
+        --line: #e2d9c9;
+        --accent: #b5502e;
+        --cv-frame-bg: #fffdf9;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #1b1815;
+          --ink: #f0ebe2;
+          --muted: #a89c8a;
+          --line: #37312a;
+          --accent: #e2875a;
+          --cv-frame-bg: #221e19;
+        }
       }
 
       * {
@@ -35,80 +69,72 @@
         margin: 0;
         font-family: "Manrope", sans-serif;
         color: var(--ink);
-        background:
-          radial-gradient(circle at 18% 12%, #d8eef7 0%, transparent 40%),
-          radial-gradient(circle at 82% 0%, #e4f9f2 0%, transparent 36%),
-          var(--bg);
+        background: var(--bg);
+        transition: background-color 0.2s ease, color 0.2s ease;
         min-height: 100vh;
       }
 
       .page {
-        width: min(1080px, 92vw);
-        margin: 2.5rem auto;
-      }
-
-      .shell {
-        background: var(--panel);
-        border: 1px solid rgba(255, 255, 255, 0.7);
-        border-radius: 20px;
-        box-shadow: var(--shadow);
-        overflow: hidden;
+        width: min(720px, 90vw);
+        margin: 4.5rem auto 5rem;
       }
 
       .top {
-        padding: 2.2rem 2.2rem 1.2rem;
-        background: linear-gradient(120deg, #0f3a56, #15516f 62%, #0a8f9a);
-        color: #f8fdff;
+        padding: 0;
       }
 
       .identity {
         margin: 0;
-        font-family: "Newsreader", serif;
-        font-size: clamp(2rem, 3.5vw, 3rem);
+        font-family: "Fraunces", serif;
+        font-weight: 600;
+        font-size: clamp(2.1rem, 5vw, 2.9rem);
         line-height: 1.05;
         letter-spacing: 0.01em;
       }
 
       .subtitle {
-        margin: 0.65rem 0 0;
-        color: rgba(248, 253, 255, 0.9);
-        max-width: 42rem;
-        font-size: 1rem;
+        margin: 0.85rem 0 0;
+        color: var(--muted);
+        max-width: 34rem;
+        font-size: 1.02rem;
+        line-height: 1.6;
       }
 
       .tabs {
-        margin-top: 1.5rem;
+        margin-top: 2.25rem;
         display: flex;
-        gap: 0.75rem;
+        gap: 1.75rem;
         flex-wrap: wrap;
+        border-bottom: 1px solid var(--line);
       }
 
       .tab {
-        border: 1px solid rgba(255, 255, 255, 0.45);
-        background: rgba(9, 28, 42, 0.35);
-        color: #eef7ff;
-        padding: 0.65rem 1rem;
-        border-radius: 999px;
-        font-size: 0.95rem;
+        border: none;
+        border-bottom: 2px solid transparent;
+        background: none;
+        color: var(--muted);
+        padding: 0 0 0.85rem;
+        margin-bottom: -1px;
+        font-family: inherit;
+        font-size: 0.85rem;
         font-weight: 700;
-        letter-spacing: 0.01em;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
         cursor: pointer;
-        transition: transform 0.2s ease, background-color 0.2s ease;
+        transition: color 0.15s ease, border-color 0.15s ease;
       }
 
       .tab:hover {
-        transform: translateY(-1px);
-        background: rgba(9, 28, 42, 0.55);
+        color: var(--ink);
       }
 
       .tab.active {
-        background: #f6fcff;
-        color: var(--navy);
-        border-color: #f6fcff;
+        color: var(--ink);
+        border-bottom-color: var(--accent);
       }
 
       .content {
-        padding: 2rem 2.2rem 2.4rem;
+        padding: 2.5rem 0 0;
       }
 
       .panel {
@@ -133,7 +159,9 @@
 
       h2 {
         margin: 0;
-        font-size: clamp(1.35rem, 2.6vw, 1.8rem);
+        font-family: "Fraunces", serif;
+        font-weight: 600;
+        font-size: clamp(1.3rem, 2.6vw, 1.6rem);
       }
 
       p {
@@ -141,34 +169,40 @@
         color: var(--muted);
       }
 
+      a {
+        color: var(--accent);
+        text-underline-offset: 0.15em;
+      }
+
       .about-grid {
-        margin-top: 1.25rem;
+        margin-top: 1.75rem;
         display: grid;
-        grid-template-columns: 1.2fr 1fr;
-        gap: 1rem;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.75rem;
       }
 
       .card {
-        border: 1px solid var(--line);
-        border-radius: 14px;
-        padding: 1rem 1rem 1.15rem;
-        background: #fcfdff;
+        border-left: 3px solid var(--accent);
+        padding: 0 0 0 1rem;
       }
 
       .card h3 {
-        margin: 0 0 0.55rem;
-        font-size: 1rem;
+        margin: 0 0 0.5rem;
+        font-size: 0.75rem;
+        font-weight: 800;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        color: var(--accent);
       }
 
       .tagline {
-        margin-top: 1.3rem;
-        display: inline-flex;
-        border-radius: 999px;
-        padding: 0.55rem 0.95rem;
-        background: var(--accent-soft);
-        color: var(--navy);
+        margin-top: 1.75rem;
+        display: inline-block;
+        border-left: 2px solid var(--accent);
+        padding-left: 0.85rem;
+        color: var(--ink);
         font-weight: 700;
-        font-size: 0.88rem;
+        font-size: 0.92rem;
       }
 
       .cv-frame {
@@ -176,8 +210,8 @@
         width: 100%;
         min-height: 72vh;
         border: 1px solid var(--line);
-        border-radius: 14px;
-        background: #f8fbfd;
+        border-radius: 6px;
+        background: var(--cv-frame-bg);
       }
 
       .cv-note {
@@ -186,45 +220,55 @@
       }
 
       .project-list {
-        margin: 1rem 0 0;
+        margin: 1.5rem 0 0;
         padding: 0;
         list-style: none;
-        display: grid;
-        gap: 0.9rem;
+        display: flex;
+        flex-direction: column;
       }
 
       .project {
-        border: 1px solid var(--line);
-        border-radius: 14px;
-        padding: 1rem;
-        background: #fbfdff;
+        border-top: 1px solid var(--line);
+        padding: 1.15rem 0;
+      }
+
+      .project:last-child {
+        border-bottom: 1px solid var(--line);
       }
 
       .project a {
-        color: var(--navy);
+        color: var(--ink);
         text-decoration: none;
-        font-weight: 800;
+        font-family: "Fraunces", serif;
+        font-weight: 600;
+        font-size: 1.08rem;
       }
 
       .project a:hover {
+        color: var(--accent);
         text-decoration: underline;
       }
 
+      .project p {
+        margin: 0.4rem 0 0;
+      }
+
       footer {
-        margin-top: 1.6rem;
+        margin-top: 3rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--line);
         color: var(--muted);
         font-size: 0.92rem;
       }
 
-      @media (max-width: 800px) {
-        .top,
-        .content {
-          padding-left: 1.1rem;
-          padding-right: 1.1rem;
-        }
+      footer a {
+        color: var(--ink);
+      }
 
+      @media (max-width: 640px) {
         .about-grid {
           grid-template-columns: 1fr;
+          gap: 1.25rem;
         }
 
         .cv-frame {
@@ -235,22 +279,21 @@
   </head>
   <body>
     <div class="page">
-      <main class="shell">
-        <header class="top">
-          <h1 class="identity">Niranjan Arun Rao</h1>
-          <p class="subtitle">
-            Machine Learning and AI enthusiast focused on practical systems,
-            thoughtful research, and clean engineering.
-          </p>
+      <header class="top">
+        <h1 class="identity">Niranjan Arun Rao</h1>
+        <p class="subtitle">
+          Machine Learning and AI enthusiast focused on practical systems,
+          thoughtful research, and clean engineering.
+        </p>
 
-          <nav class="tabs" aria-label="Primary">
-            <button class="tab active" data-tab="about">About</button>
-            <button class="tab" data-tab="cv">CV</button>
-            <button class="tab" data-tab="projects">Projects</button>
-          </nav>
-        </header>
+        <nav class="tabs" aria-label="Primary">
+          <button class="tab active" data-tab="about">About</button>
+          <button class="tab" data-tab="cv">CV</button>
+          <button class="tab" data-tab="projects">Projects</button>
+        </nav>
+      </header>
 
-        <section class="content">
+      <main class="content">
           <article id="about" class="panel active">
             <h2>About</h2>
             <p>
@@ -352,7 +395,6 @@
             and
             <a href="https://linkedin.com/in/niranjan-arun-rao" target="_blank" rel="noopener">LinkedIn</a>.
           </footer>
-        </section>
       </main>
     </div>
 
