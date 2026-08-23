@@ -98,6 +98,25 @@
         border-bottom-color: var(--accent);
       }
 
+      .theme-toggle {
+        margin-left: auto;
+        background: none;
+        border: none;
+        color: var(--muted);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0 0 0.85rem;
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-transform: none;
+      }
+
+      .theme-toggle:hover {
+        color: var(--ink);
+      }
+
       .content {
         padding: 2.5rem 0 0;
       }
@@ -272,6 +291,24 @@
           min-height: 64vh;
         }
       }
+      /* Theme overrides (light/dark) */
+      :root {
+        --bg: #ffffff;
+      }
+
+      html[data-theme="dark"] {
+        --bg: #071018;
+        --ink: #e6eef8;
+        --muted: #9aa6b2;
+        --line: rgba(255,255,255,0.06);
+        --accent: #7bd389;
+        --cv-frame-bg: #0b1620;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--ink);
+      }
     </style>
   </head>
   <body>
@@ -279,14 +316,15 @@
       <header class="top">
         <h1 class="identity">Niranjan Arun Rao</h1>
         <p class="subtitle">
-          I am a data scientist who loves to apply contemporary research to business problems and bring impact at scale. I occasionaly write about it, here. 
+          I am a data scientist who loves to apply contemporary research to business problems and bring impact at scale. I occasionaly write here. 
         </p>
 
         <nav class="tabs" aria-label="Primary">
           <button class="tab active" data-tab="about">About</button>
           <button class="tab" data-tab="cv">CV</button>
           <button class="tab" data-tab="projects">Projects</button>
-          <button class="tab" data-tab="blog">Blog</button>
+          <a class="tab" data-tab="blog" href="#blog">Blog</a>
+          <button id="themeToggle" class="theme-toggle" aria-pressed="false" title="Toggle color theme">🌙</button>
         </nav>
       </header>
 
@@ -294,10 +332,10 @@
           <article id="about" class="panel active">
             <h2>About</h2>
             <p>
-              I work at Target, a Fortune 50 retail, and have been part of several high-impact projects over the course of the past 3 years.
-              I designed and built an optimization engine to reduce purchase order cost - read about it here.
-              I trained a graph neural network model to develop embeddings for Target guests - powering a plethora of applications from nearest neighbour search to clustering - writeup here.
-              In my current role, I have built a multi-agent system to run simulations for perishable item orders at Target stores - saving upwards $15M of savings by reducing wastage and improving utilization. 
+              I work at Target, a Fortune 50 retail giant, and have been part of several high-impact projects over the course of the past 3 years.
+              I designed and built an optimization engine to reduce purchase order cost - read about it here.<br>
+              I trained a graph neural network model to develop embeddings for Target guests - powering a plethora of applications from nearest neighbour search to clustering - writeup here.<br>
+              In my current role, I have built a multi-agent system to run simulations for perishable item orders at Target stores - saving upwards $15M of savings by reducing wastage and improving utilization.<br> 
             </p>
 
             <div class="about-grid">
@@ -405,10 +443,15 @@
           </article>
 
           <footer>
-            Connect on
-            <a href="https://github.com/niranjanrao13" target="_blank" rel="noopener">GitHub</a>
-            and
-            <a href="https://linkedin.com/in/niranjan-arun-rao" target="_blank" rel="noopener">LinkedIn</a>.
+            <div style="display:inline-flex;gap:0.6rem;align-items:center;">
+              <span>Connect on:</span>
+              <a href="https://github.com/niranjanrao13" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub">
+                <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82A7.65 7.65 0 018 4.58c.68.003 1.36.092 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+              </a>
+              <a href="https://linkedin.com/in/niranjan-arun-rao" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.1 1 2.5 1 4.98 2.12 4.98 3.5zM0 8h5v16H0V8zm7.5 0h4.8v2.2h.07c.67-1.27 2.3-2.6 4.73-2.6C22.2 7.6 24 9.9 24 13.9V24h-5V14.8c0-2.2-.04-5-3.05-5-3.05 0-3.52 2.39-3.52 4.85V24h-5V8z"/></svg>
+              </a>
+            </div>
           </footer>
       </main>
     </div>
@@ -428,7 +471,8 @@
       }
 
       tabs.forEach((tab) => {
-        tab.addEventListener("click", () => {
+        tab.addEventListener("click", (e) => {
+          e.preventDefault();
           showTab(tab.dataset.tab);
           history.replaceState(null, "", `#${tab.dataset.tab}`);
         });
@@ -438,6 +482,24 @@
       if (initial && ["about", "cv", "projects", "blog"].includes(initial)) {
         showTab(initial);
       }
+
+      // Theme toggle
+      const themeToggle = document.getElementById("themeToggle");
+      function applyTheme(t) {
+        document.documentElement.setAttribute("data-theme", t);
+        localStorage.setItem("theme", t);
+        themeToggle.textContent = t === "dark" ? "☀️" : "🌙";
+        themeToggle.setAttribute("aria-pressed", t === "dark");
+      }
+
+      const savedTheme = localStorage.getItem("theme") ||
+        (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      applyTheme(savedTheme);
+
+      themeToggle.addEventListener("click", () => {
+        const next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        applyTheme(next);
+      });
 
       function escapeHtml(str) {
         return str.replace(
