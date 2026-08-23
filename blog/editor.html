@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>Editor | Niranjan</title>
+
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/theme.css" />
+    <style>
+      .page {
+        width: min(720px, 92vw);
+        margin: 0 auto 6rem;
+      }
+
+      .editor-topbar {
+        position: sticky;
+        top: 0;
+        z-index: 3;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.1rem 0;
+        background: var(--bg);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .back-link {
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        text-decoration: none;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+
+      .back-link:hover {
+        color: var(--accent);
+      }
+
+      .draft-controls {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex: 1;
+        min-width: 0;
+      }
+
+      .draft-controls select {
+        max-width: 12rem;
+        flex-shrink: 1;
+        min-width: 0;
+        font-family: inherit;
+        font-size: 0.85rem;
+        color: var(--ink);
+        background: var(--bg);
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 0.4rem 0.5rem;
+      }
+
+      .icon-btn {
+        font-family: inherit;
+        font-size: 0.82rem;
+        font-weight: 700;
+        color: var(--muted);
+        background: none;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 0.4rem 0.7rem;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+
+      .icon-btn:hover {
+        color: var(--ink);
+        border-color: var(--accent);
+      }
+
+      .save-status {
+        font-size: 0.82rem;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+
+      .toolbar {
+        position: sticky;
+        top: 3.6rem;
+        z-index: 2;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+        padding: 0.75rem 0;
+        background: var(--bg);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .toolbar button {
+        font-family: "Fraunces", serif;
+        font-size: 0.95rem;
+        color: var(--ink);
+        background: none;
+        border: 1px solid transparent;
+        border-radius: 6px;
+        padding: 0.35rem 0.6rem;
+        cursor: pointer;
+        line-height: 1;
+      }
+
+      .toolbar button:hover {
+        border-color: var(--line);
+        background: color-mix(in srgb, var(--ink) 5%, transparent);
+      }
+
+      .toolbar button.is-active {
+        color: var(--accent);
+        border-color: var(--accent);
+      }
+
+      .toolbar-divider {
+        width: 1px;
+        margin: 0 0.25rem;
+        background: var(--line);
+      }
+
+      .title-input,
+      .subtitle-input {
+        display: block;
+        width: 100%;
+        border: none;
+        outline: none;
+        background: none;
+        color: var(--ink);
+        font-family: "Fraunces", serif;
+        resize: none;
+      }
+
+      .title-input {
+        margin-top: 2.25rem;
+        font-size: clamp(1.9rem, 5vw, 2.5rem);
+        font-weight: 600;
+        line-height: 1.15;
+      }
+
+      .title-input::placeholder,
+      .subtitle-input::placeholder {
+        color: var(--muted);
+        opacity: 0.65;
+      }
+
+      .subtitle-input {
+        margin-top: 0.75rem;
+        font-size: 1.25rem;
+        font-weight: 400;
+        color: var(--muted);
+      }
+
+      .editor-body {
+        margin-top: 2rem;
+        min-height: 40vh;
+        outline: none;
+      }
+
+      .editor-body.is-empty::before {
+        content: attr(data-placeholder);
+        color: var(--muted);
+        opacity: 0.65;
+        pointer-events: none;
+      }
+
+      .editor-footer {
+        margin-top: 2.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--line);
+      }
+
+      .primary-btn {
+        font-family: "Manrope", sans-serif;
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--bg);
+        background: var(--accent);
+        border: none;
+        border-radius: 6px;
+        padding: 0.7rem 1.2rem;
+        cursor: pointer;
+      }
+
+      .primary-btn:hover {
+        opacity: 0.9;
+      }
+
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 10;
+        background: color-mix(in srgb, var(--ink) 45%, transparent);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+      }
+
+      .modal {
+        width: min(30rem, 100%);
+        max-height: 85vh;
+        overflow-y: auto;
+        background: var(--bg);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 1.75rem;
+      }
+
+      .modal h2 {
+        margin: 0 0 0.75rem;
+        font-size: 1.3rem;
+      }
+
+      .modal p {
+        font-size: 0.92rem;
+      }
+
+      .modal code {
+        font-family: "SFMono-Regular", Consolas, monospace;
+        font-size: 0.85rem;
+        background: color-mix(in srgb, var(--ink) 6%, transparent);
+        padding: 0.1rem 0.35rem;
+        border-radius: 4px;
+      }
+
+      .modal label {
+        display: block;
+        margin-top: 1rem;
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .modal textarea {
+        width: 100%;
+        margin-top: 0.4rem;
+        font-family: "SFMono-Regular", Consolas, monospace;
+        font-size: 0.82rem;
+        color: var(--ink);
+        background: color-mix(in srgb, var(--ink) 4%, transparent);
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 0.6rem;
+      }
+
+      .modal-actions {
+        margin-top: 1.5rem;
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <div class="editor-topbar">
+        <a class="back-link" href="../index.html#blog">&larr; Exit</a>
+        <div class="draft-controls">
+          <select id="draftSelect" aria-label="Drafts"></select>
+          <button type="button" class="icon-btn" id="newDraftBtn">New</button>
+          <button type="button" class="icon-btn" id="deleteDraftBtn">Delete</button>
+        </div>
+        <div class="save-status" id="saveStatus">Saved</div>
+      </div>
+
+      <div class="toolbar" id="toolbar" role="toolbar" aria-label="Formatting">
+        <button type="button" data-cmd="bold" title="Bold"><b>B</b></button>
+        <button type="button" data-cmd="italic" title="Italic"><i>I</i></button>
+        <button type="button" data-cmd="strikeThrough" title="Strikethrough"><s>S</s></button>
+        <button type="button" id="linkBtn" title="Link">Link</button>
+        <span class="toolbar-divider"></span>
+        <button type="button" data-block="H2" title="Heading">H2</button>
+        <button type="button" data-block="H3" title="Subheading">H3</button>
+        <button type="button" data-block="BLOCKQUOTE" title="Quote">&ldquo;&rdquo;</button>
+        <span class="toolbar-divider"></span>
+        <button type="button" data-cmd="insertUnorderedList" title="Bulleted list">&bull; List</button>
+        <button type="button" data-cmd="insertOrderedList" title="Numbered list">1. List</button>
+        <span class="toolbar-divider"></span>
+        <button type="button" id="imageBtn" title="Image">Image</button>
+        <button type="button" id="dividerBtn" title="Divider">&mdash;</button>
+        <button type="button" data-block="PRE" title="Code block">&lt;/&gt;</button>
+      </div>
+
+      <input id="titleInput" class="title-input" placeholder="Title" autocomplete="off" />
+      <input
+        id="subtitleInput"
+        class="subtitle-input"
+        placeholder="Add a subtitle..."
+        autocomplete="off"
+      />
+
+      <div
+        id="editorBody"
+        class="editor-body prose is-empty"
+        contenteditable="true"
+        data-placeholder="Start writing..."
+      ></div>
+
+      <div class="editor-footer">
+        <button type="button" class="primary-btn" id="exportBtn">Export post&hellip;</button>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="exportModal" hidden>
+      <div class="modal">
+        <h2>Export &ldquo;<span id="exportTitleOut"></span>&rdquo;</h2>
+        <p>
+          This site is static, so publishing is a manual commit. Download the post file below,
+          save it as <code>assets/blog/posts/<span id="exportSlugOut"></span>.json</code>, add
+          the entry below to <code>assets/blog/posts/index.json</code>, then commit &amp; push.
+        </p>
+        <label for="indexEntryOut">Add this to index.json</label>
+        <textarea id="indexEntryOut" readonly rows="7"></textarea>
+        <div class="modal-actions">
+          <button type="button" class="primary-btn" id="downloadJsonBtn">Download post JSON</button>
+          <button type="button" class="icon-btn" id="closeExportBtn">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const DRAFTS_KEY = "blogDrafts:v1";
+      const titleInput = document.getElementById("titleInput");
+      const subtitleInput = document.getElementById("subtitleInput");
+      const editorBody = document.getElementById("editorBody");
+      const draftSelect = document.getElementById("draftSelect");
+      const saveStatus = document.getElementById("saveStatus");
+
+      function loadDrafts() {
+        try {
+          return JSON.parse(localStorage.getItem(DRAFTS_KEY)) || {};
+        } catch {
+          return {};
+        }
+      }
+
+      function saveDrafts(drafts) {
+        localStorage.setItem(DRAFTS_KEY, JSON.stringify(drafts));
+      }
+
+      function makeId() {
+        return crypto.randomUUID
+          ? crypto.randomUUID()
+          : "d" + Date.now() + Math.random().toString(36).slice(2);
+      }
+
+      function goToDraft(id) {
+        window.location.href = "editor.html?draft=" + encodeURIComponent(id);
+      }
+
+      const drafts = loadDrafts();
+      const params = new URLSearchParams(window.location.search);
+      let currentId = params.get("draft");
+
+      if (!currentId || !drafts[currentId]) {
+        currentId = makeId();
+        drafts[currentId] = {
+          id: currentId,
+          title: "",
+          subtitle: "",
+          html: "",
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+        };
+        saveDrafts(drafts);
+        history.replaceState(null, "", "editor.html?draft=" + currentId);
+      }
+
+      function renderDraftSelect() {
+        const list = Object.values(drafts).sort((a, b) => b.updatedAt - a.updatedAt);
+        draftSelect.innerHTML = "";
+        list.forEach((d) => {
+          const opt = document.createElement("option");
+          opt.value = d.id;
+          opt.textContent = d.title.trim() || "Untitled draft";
+          if (d.id === currentId) opt.selected = true;
+          draftSelect.appendChild(opt);
+        });
+      }
+
+      function updateEmptyState() {
+        const isEmpty = editorBody.textContent.trim() === "";
+        editorBody.classList.toggle("is-empty", isEmpty);
+      }
+
+      function loadCurrentDraft() {
+        const d = drafts[currentId];
+        titleInput.value = d.title || "";
+        subtitleInput.value = d.subtitle || "";
+        editorBody.innerHTML = d.html || "";
+        updateEmptyState();
+      }
+
+      renderDraftSelect();
+      loadCurrentDraft();
+
+      let saveTimer = null;
+      function scheduleSave() {
+        saveStatus.textContent = "Saving…";
+        clearTimeout(saveTimer);
+        saveTimer = setTimeout(() => {
+          const d = drafts[currentId];
+          d.title = titleInput.value;
+          d.subtitle = subtitleInput.value;
+          d.html = editorBody.innerHTML;
+          d.updatedAt = Date.now();
+          saveDrafts(drafts);
+          const opt = draftSelect.querySelector(`option[value="${CSS.escape(currentId)}"]`);
+          if (opt) opt.textContent = d.title.trim() || "Untitled draft";
+          const t = new Date(d.updatedAt);
+          saveStatus.textContent =
+            "Saved " + t.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
+        }, 600);
+      }
+
+      titleInput.addEventListener("input", scheduleSave);
+      subtitleInput.addEventListener("input", scheduleSave);
+      editorBody.addEventListener("input", () => {
+        updateEmptyState();
+        scheduleSave();
+      });
+
+      draftSelect.addEventListener("change", (e) => goToDraft(e.target.value));
+
+      document.getElementById("newDraftBtn").addEventListener("click", () => {
+        const id = makeId();
+        drafts[id] = {
+          id,
+          title: "",
+          subtitle: "",
+          html: "",
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+        };
+        saveDrafts(drafts);
+        goToDraft(id);
+      });
+
+      document.getElementById("deleteDraftBtn").addEventListener("click", () => {
+        if (!confirm("Delete this draft? This cannot be undone.")) return;
+        delete drafts[currentId];
+        const remaining = Object.values(drafts).sort((a, b) => b.updatedAt - a.updatedAt);
+        if (remaining.length > 0) {
+          saveDrafts(drafts);
+          goToDraft(remaining[0].id);
+        } else {
+          const id = makeId();
+          drafts[id] = {
+            id,
+            title: "",
+            subtitle: "",
+            html: "",
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+          };
+          saveDrafts(drafts);
+          goToDraft(id);
+        }
+      });
+
+      // --- Formatting toolbar ---
+      // Keep focus/selection inside the editor when clicking toolbar buttons.
+      document.getElementById("toolbar").addEventListener("mousedown", (e) => {
+        e.preventDefault();
+      });
+
+      document.querySelectorAll(".toolbar [data-cmd]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          editorBody.focus();
+          document.execCommand(btn.dataset.cmd, false, null);
+          updateEmptyState();
+          scheduleSave();
+        });
+      });
+
+      document.querySelectorAll(".toolbar [data-block]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          editorBody.focus();
+          const tag = btn.dataset.block;
+          const current = document.queryCommandValue("formatBlock").toUpperCase();
+          document.execCommand("formatBlock", false, current === tag ? "P" : tag);
+          updateEmptyState();
+          scheduleSave();
+        });
+      });
+
+      document.getElementById("linkBtn").addEventListener("mousedown", (e) => e.preventDefault());
+      document.getElementById("linkBtn").addEventListener("click", () => {
+        const url = prompt("Link URL");
+        if (!url) return;
+        editorBody.focus();
+        document.execCommand("createLink", false, url);
+        scheduleSave();
+      });
+
+      document.getElementById("imageBtn").addEventListener("mousedown", (e) => e.preventDefault());
+      document.getElementById("imageBtn").addEventListener("click", () => {
+        const url = prompt("Image URL");
+        if (!url) return;
+        editorBody.focus();
+        document.execCommand("insertImage", false, url);
+        updateEmptyState();
+        scheduleSave();
+      });
+
+      document.getElementById("dividerBtn").addEventListener("mousedown", (e) => e.preventDefault());
+      document.getElementById("dividerBtn").addEventListener("click", () => {
+        editorBody.focus();
+        document.execCommand("insertHorizontalRule", false, null);
+        // Chrome leaves a stray id="null" on the inserted <hr>; strip it.
+        editorBody.querySelectorAll('hr[id="null"]').forEach((hr) => hr.removeAttribute("id"));
+        scheduleSave();
+      });
+
+      // --- Export ---
+      function slugify(str) {
+        const s = str
+          .toLowerCase()
+          .trim()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-+|-+$/g, "");
+        return s || "untitled-" + Date.now();
+      }
+
+      function buildPost() {
+        const title = titleInput.value.trim() || "Untitled";
+        const subtitle = subtitleInput.value.trim();
+        const contentHtml = editorBody.innerHTML;
+        const text = editorBody.textContent.trim();
+        const words = text.length ? text.split(/\s+/).length : 0;
+        const readMins = Math.max(1, Math.round(words / 200));
+        const excerpt = subtitle || (text.length > 160 ? text.slice(0, 157) + "…" : text);
+        const slug = slugify(title);
+        const date = new Date().toISOString().slice(0, 10);
+        return { slug, title, subtitle, date, contentHtml, excerpt, readMins };
+      }
+
+      let lastExportedPost = null;
+
+      document.getElementById("exportBtn").addEventListener("click", () => {
+        const post = buildPost();
+        lastExportedPost = post;
+        document.getElementById("exportTitleOut").textContent = post.title;
+        document.getElementById("exportSlugOut").textContent = post.slug;
+        const indexEntry = {
+          slug: post.slug,
+          title: post.title,
+          excerpt: post.excerpt,
+          date: post.date,
+          readMins: post.readMins,
+        };
+        document.getElementById("indexEntryOut").value = JSON.stringify(indexEntry, null, 2) + ",";
+        document.getElementById("exportModal").hidden = false;
+      });
+
+      document.getElementById("closeExportBtn").addEventListener("click", () => {
+        document.getElementById("exportModal").hidden = true;
+      });
+
+      document.getElementById("downloadJsonBtn").addEventListener("click", () => {
+        if (!lastExportedPost) return;
+        const blob = new Blob([JSON.stringify(lastExportedPost, null, 2)], {
+          type: "application/json",
+        });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = lastExportedPost.slug + ".json";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      });
+    </script>
+  </body>
+</html>

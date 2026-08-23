@@ -39,43 +39,10 @@
       href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="assets/theme.css" />
     <style>
-      :root {
-        color-scheme: light dark;
-        --bg: #f7f3ec;
-        --ink: #23201b;
-        --muted: #6f6659;
-        --line: #e2d9c9;
-        --accent: #b5502e;
-        --cv-frame-bg: #fffdf9;
-      }
-
-      @media (prefers-color-scheme: dark) {
-        :root {
-          --bg: #1b1815;
-          --ink: #f0ebe2;
-          --muted: #a89c8a;
-          --line: #37312a;
-          --accent: #e2875a;
-          --cv-frame-bg: #221e19;
-        }
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        margin: 0;
-        font-family: "Manrope", sans-serif;
-        color: var(--ink);
-        background: var(--bg);
-        transition: background-color 0.2s ease, color 0.2s ease;
-        min-height: 100vh;
-      }
-
       .page {
-        width: min(720px, 90vw);
+        width: min(1040px, 92vw);
         margin: 4.5rem auto 5rem;
       }
 
@@ -85,8 +52,6 @@
 
       .identity {
         margin: 0;
-        font-family: "Fraunces", serif;
-        font-weight: 600;
         font-size: clamp(2.1rem, 5vw, 2.9rem);
         line-height: 1.05;
         letter-spacing: 0.01em;
@@ -159,19 +124,7 @@
 
       h2 {
         margin: 0;
-        font-family: "Fraunces", serif;
-        font-weight: 600;
         font-size: clamp(1.3rem, 2.6vw, 1.6rem);
-      }
-
-      p {
-        line-height: 1.65;
-        color: var(--muted);
-      }
-
-      a {
-        color: var(--accent);
-        text-underline-offset: 0.15em;
       }
 
       .about-grid {
@@ -253,6 +206,50 @@
         margin: 0.4rem 0 0;
       }
 
+      .post-list {
+        margin: 1.5rem 0 0;
+        padding: 0;
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .post {
+        border-top: 1px solid var(--line);
+        padding: 1.15rem 0;
+      }
+
+      .post:last-child {
+        border-bottom: 1px solid var(--line);
+      }
+
+      .post a {
+        color: var(--ink);
+        text-decoration: none;
+        font-family: "Fraunces", serif;
+        font-weight: 600;
+        font-size: 1.08rem;
+      }
+
+      .post a:hover {
+        color: var(--accent);
+        text-decoration: underline;
+      }
+
+      .post p {
+        margin: 0.4rem 0 0;
+      }
+
+      .post-meta {
+        margin-top: 0.5rem;
+        font-size: 0.82rem;
+        color: var(--muted);
+      }
+
+      .post-empty {
+        margin-top: 1.5rem;
+      }
+
       footer {
         margin-top: 3rem;
         padding-top: 1.5rem;
@@ -290,6 +287,7 @@
           <button class="tab active" data-tab="about">About</button>
           <button class="tab" data-tab="cv">CV</button>
           <button class="tab" data-tab="projects">Projects</button>
+          <button class="tab" data-tab="blog">Blog</button>
         </nav>
       </header>
 
@@ -389,6 +387,14 @@
             </ul>
           </article>
 
+          <article id="blog" class="panel">
+            <h2>Blog</h2>
+            <ul class="post-list" id="postList"></ul>
+            <p class="post-empty" id="postEmpty" hidden>
+              No posts yet — check back soon.
+            </p>
+          </article>
+
           <footer>
             Connect on
             <a href="https://github.com/niranjanrao13" target="_blank" rel="noopener">GitHub</a>
@@ -420,9 +426,54 @@
       });
 
       const initial = window.location.hash.replace("#", "");
-      if (initial && ["about", "cv", "projects"].includes(initial)) {
+      if (initial && ["about", "cv", "projects", "blog"].includes(initial)) {
         showTab(initial);
       }
+
+      function escapeHtml(str) {
+        return str.replace(
+          /[&<>"']/g,
+          (c) =>
+            ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])
+        );
+      }
+
+      function formatDate(iso) {
+        const d = new Date(iso);
+        if (Number.isNaN(d.getTime())) return iso;
+        return d.toLocaleDateString(undefined, {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        });
+      }
+
+      fetch("assets/blog/posts/index.json", { cache: "no-store" })
+        .then((res) => (res.ok ? res.json() : []))
+        .then((posts) => {
+          const list = document.getElementById("postList");
+          const empty = document.getElementById("postEmpty");
+          if (!Array.isArray(posts) || posts.length === 0) {
+            empty.hidden = false;
+            return;
+          }
+          posts
+            .slice()
+            .sort((a, b) => new Date(b.date) - new Date(a.date))
+            .forEach((post) => {
+              const li = document.createElement("li");
+              li.className = "post";
+              li.innerHTML = `
+                <a href="blog/post.html?slug=${encodeURIComponent(post.slug)}">${escapeHtml(post.title)}</a>
+                <p>${escapeHtml(post.excerpt || "")}</p>
+                <div class="post-meta">${formatDate(post.date)} · ${post.readMins || 1} min read</div>
+              `;
+              list.appendChild(li);
+            });
+        })
+        .catch(() => {
+          document.getElementById("postEmpty").hidden = false;
+        });
     </script>
   </body>
 </html>

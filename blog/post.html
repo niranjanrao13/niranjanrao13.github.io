@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blog | Niranjan</title>
+    <meta name="description" content="A post from Niranjan's blog." />
+
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="../assets/favicon-192.png" />
+    <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/theme.css" />
+    <style>
+      .page {
+        width: min(720px, 92vw);
+        margin: 3.5rem auto 5rem;
+      }
+
+      .back-link {
+        display: inline-block;
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        text-decoration: none;
+        color: var(--muted);
+      }
+
+      .back-link:hover {
+        color: var(--accent);
+      }
+
+      .article-header {
+        margin-top: 2.5rem;
+        padding-bottom: 1.75rem;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .article-title {
+        margin: 0;
+        font-size: clamp(2rem, 5vw, 2.7rem);
+        line-height: 1.1;
+      }
+
+      .article-subtitle {
+        margin: 1rem 0 0;
+        font-size: 1.2rem;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      .byline {
+        margin-top: 1.5rem;
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+
+      .prose {
+        margin-top: 2.5rem;
+      }
+
+      .not-found {
+        margin-top: 2.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <a class="back-link" href="../index.html#blog">&larr; Back to blog</a>
+
+      <p class="not-found" id="notFound" hidden>
+        Post not found. It may have been moved or removed.
+        <a href="../index.html#blog">Return to the blog list</a>.
+      </p>
+
+      <article id="article" hidden>
+        <header class="article-header">
+          <h1 class="article-title" id="articleTitle"></h1>
+          <p class="article-subtitle" id="articleSubtitle" hidden></p>
+          <div class="byline" id="articleByline"></div>
+        </header>
+        <div class="prose" id="articleBody"></div>
+      </article>
+    </div>
+
+    <script>
+      function formatDate(iso) {
+        const d = new Date(iso);
+        if (Number.isNaN(d.getTime())) return iso;
+        return d.toLocaleDateString(undefined, {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+      }
+
+      const params = new URLSearchParams(window.location.search);
+      const slug = params.get("slug");
+
+      if (!slug) {
+        document.getElementById("notFound").hidden = false;
+      } else {
+        fetch(`../assets/blog/posts/${encodeURIComponent(slug)}.json`, { cache: "no-store" })
+          .then((res) => {
+            if (!res.ok) throw new Error("not found");
+            return res.json();
+          })
+          .then((post) => {
+            document.title = `${post.title} | Niranjan`;
+            document.getElementById("articleTitle").textContent = post.title;
+
+            if (post.subtitle) {
+              const sub = document.getElementById("articleSubtitle");
+              sub.textContent = post.subtitle;
+              sub.hidden = false;
+            }
+
+            document.getElementById("articleByline").textContent =
+              `Niranjan Arun Rao · ${formatDate(post.date)} · ${post.readMins || 1} min read`;
+
+            document.getElementById("articleBody").innerHTML = post.contentHtml || "";
+            document.getElementById("article").hidden = false;
+          })
+          .catch(() => {
+            document.getElementById("notFound").hidden = false;
+          });
+      }
+    </script>
+  </body>
+</html>
