@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Blog | Niranjan</title>
-    <meta name="description" content="A post from Niranjan's blog." />
+    <meta name="description" content="An article by Niranjan, originally published on Medium." />
 
     <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="../assets/favicon-192.png" />
@@ -69,14 +69,45 @@
       .not-found {
         margin-top: 2.5rem;
       }
+
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+
+      .tag {
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 0.2rem 0.65rem;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: var(--muted);
+      }
+
+      .source-note {
+        margin-top: 3rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--line);
+        font-size: 0.95rem;
+      }
+
+      .loading {
+        margin-top: 2.5rem;
+        color: var(--muted);
+      }
     </style>
   </head>
   <body>
     <div class="page">
       <a class="back-link" href="../index.html#blog">&larr; Back to blog</a>
 
+      <p class="loading" id="loading">Loading from Medium…</p>
+
       <p class="not-found" id="notFound" hidden>
-        Post not found. It may have been moved or removed.
+        Couldn't load this post. It may have been moved or removed, or Medium
+        may be unreachable right now.
         <a href="../index.html#blog">Return to the blog list</a>.
       </p>
 
@@ -85,52 +116,56 @@
           <h1 class="article-title" id="articleTitle"></h1>
           <p class="article-subtitle" id="articleSubtitle" hidden></p>
           <div class="byline" id="articleByline"></div>
+          <div class="tags" id="articleTags"></div>
         </header>
         <div class="prose" id="articleBody"></div>
+        <p class="source-note">
+          Originally published on
+          <a id="mediumLink" href="#" target="_blank" rel="noopener">Medium</a>.
+        </p>
       </article>
     </div>
 
+    <script src="../assets/medium.js"></script>
     <script>
-      function formatDate(iso) {
-        const d = new Date(iso);
-        if (Number.isNaN(d.getTime())) return iso;
-        return d.toLocaleDateString(undefined, {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        });
+      const id = new URLSearchParams(window.location.search).get("id");
+      const loading = document.getElementById("loading");
+      const notFound = document.getElementById("notFound");
+
+      function fail() {
+        loading.hidden = true;
+        notFound.hidden = false;
       }
 
-      const params = new URLSearchParams(window.location.search);
-      const slug = params.get("slug");
-
-      if (!slug) {
-        document.getElementById("notFound").hidden = false;
+      if (!id) {
+        fail();
       } else {
-        fetch(`../assets/blog/posts/${encodeURIComponent(slug)}.json`, { cache: "no-store" })
-          .then((res) => {
-            if (!res.ok) throw new Error("not found");
-            return res.json();
-          })
-          .then((post) => {
+        Medium.loadPosts()
+          .then((posts) => {
+            const post = posts.find((p) => p.id === id);
+            if (!post) return fail();
+
             document.title = `${post.title} | Niranjan`;
             document.getElementById("articleTitle").textContent = post.title;
-
-            if (post.subtitle) {
-              const sub = document.getElementById("articleSubtitle");
-              sub.textContent = post.subtitle;
-              sub.hidden = false;
-            }
-
             document.getElementById("articleByline").textContent =
-              `Niranjan Arun Rao · ${formatDate(post.date)} · ${post.readMins || 1} min read`;
+              `Niranjan Arun Rao · ${Medium.formatDate(post.date, "long")} · ${post.readMins} min read`;
 
-            document.getElementById("articleBody").innerHTML = post.contentHtml || "";
+            const tags = document.getElementById("articleTags");
+            post.categories.slice(0, 5).forEach((c) => {
+              const el = document.createElement("span");
+              el.className = "tag";
+              el.textContent = c;
+              tags.appendChild(el);
+            });
+
+            document.getElementById("articleBody").innerHTML =
+              Medium.sanitize(post.content, post.title);
+            document.getElementById("mediumLink").href = post.link;
+
+            loading.hidden = true;
             document.getElementById("article").hidden = false;
           })
-          .catch(() => {
-            document.getElementById("notFound").hidden = false;
-          });
+          .catch(fail);
       }
     </script>
   </body>

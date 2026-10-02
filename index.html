@@ -259,6 +259,42 @@
         margin: 0.4rem 0 0;
       }
 
+      .post-link {
+        display: flex;
+        gap: 1.25rem;
+        align-items: flex-start;
+        text-decoration: none !important;
+      }
+
+      .post-thumb {
+        flex: 0 0 150px;
+        width: 150px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 6px;
+        background: var(--line);
+      }
+
+      .post-body {
+        min-width: 0;
+      }
+
+      .post-title {
+        color: var(--ink);
+        font-family: "Fraunces", serif;
+        font-weight: 600;
+        font-size: 1.08rem;
+      }
+
+      .post-link:hover .post-title {
+        color: var(--accent);
+        text-decoration: underline;
+      }
+
+      .post-tags {
+        margin-left: 0.4rem;
+      }
+
       .post-meta {
         margin-top: 0.5rem;
         font-size: 0.82rem;
@@ -289,6 +325,16 @@
 
         .cv-frame {
           min-height: 64vh;
+        }
+
+        .post-link {
+          flex-direction: column;
+        }
+
+        .post-thumb {
+          width: 100%;
+          height: 170px;
+          flex-basis: auto;
         }
       }
       /* Theme overrides (light/dark) */
@@ -333,8 +379,8 @@
             <h2>About</h2>
             <p>
               I work at Target, a Fortune 50 retail giant, and have been part of several high-impact projects over the course of the past 3 years.
-              I designed and built an optimization engine to reduce purchase order cost - read about it here.<br>
-              I trained a graph neural network model to develop embeddings for Target guests - powering a plethora of applications from nearest neighbour search to clustering - writeup here.<br>
+              I designed and built an optimization engine to reduce purchase order cost. This gave me a great introduction to the exciting space of order fulfillment, taught me operations research, and much more.<br>
+              I trained a graph neural network model to develop embeddings for Target guests - powering a plethora of applications from nearest neighbour search to clustering.<br>
               In my current role, I have built a multi-agent system to run simulations for perishable item orders at Target stores - saving upwards $15M of savings by reducing wastage and improving utilization.<br> 
             </p>
 
@@ -342,7 +388,7 @@
               <section class="card">
                 <h3>Core Interests</h3>
                 <p>
-                  Machine learning - spanning adtech, supply chain, personalization, and operations. 
+                  Machine learning - spanning tech, supply chain, personalization, and operations. 
                 </p>
               </section>
               <section class="card">
@@ -436,9 +482,14 @@
 
           <article id="blog" class="panel">
             <h2>Blog</h2>
+            <p class="post-empty" id="postLoading">Loading posts from Medium…</p>
             <ul class="post-list" id="postList"></ul>
             <p class="post-empty" id="postEmpty" hidden>
-              No posts yet — check back soon.
+              Couldn't load posts right now. You can read them directly on
+              <a id="mediumProfile" href="#" target="_blank" rel="noopener">Medium</a>.
+            </p>
+            <p class="post-empty" id="postMore" hidden>
+              More on <a id="mediumProfile2" href="#" target="_blank" rel="noopener">Medium</a>.
             </p>
           </article>
 
@@ -456,6 +507,7 @@
       </main>
     </div>
 
+    <script src="assets/medium.js"></script>
     <script>
       const tabs = document.querySelectorAll(".tab");
       const panels = document.querySelectorAll(".panel");
@@ -509,40 +561,40 @@
         );
       }
 
-      function formatDate(iso) {
-        const d = new Date(iso);
-        if (Number.isNaN(d.getTime())) return iso;
-        return d.toLocaleDateString(undefined, {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-        });
-      }
+      document.getElementById("mediumProfile").href = Medium.PROFILE_URL;
+      document.getElementById("mediumProfile2").href = Medium.PROFILE_URL;
 
-      fetch("assets/blog/posts/index.json", { cache: "no-store" })
-        .then((res) => (res.ok ? res.json() : []))
+      Medium.loadPosts()
         .then((posts) => {
           const list = document.getElementById("postList");
-          const empty = document.getElementById("postEmpty");
-          if (!Array.isArray(posts) || posts.length === 0) {
-            empty.hidden = false;
+          document.getElementById("postLoading").hidden = true;
+          if (posts.length === 0) {
+            document.getElementById("postEmpty").hidden = false;
             return;
           }
-          posts
-            .slice()
-            .sort((a, b) => new Date(b.date) - new Date(a.date))
-            .forEach((post) => {
-              const li = document.createElement("li");
-              li.className = "post";
-              li.innerHTML = `
-                <a href="blog/post.html?slug=${encodeURIComponent(post.slug)}">${escapeHtml(post.title)}</a>
-                <p>${escapeHtml(post.excerpt || "")}</p>
-                <div class="post-meta">${formatDate(post.date)} · ${post.readMins || 1} min read</div>
-              `;
-              list.appendChild(li);
-            });
+          posts.forEach((post) => {
+            const li = document.createElement("li");
+            li.className = "post";
+            const tags = post.categories
+              .slice(0, 3)
+              .map(escapeHtml)
+              .join(" · ");
+            li.innerHTML = `
+              <a class="post-link" href="blog/post.html?id=${encodeURIComponent(post.id)}">
+                ${post.thumbnail ? `<img class="post-thumb" src="${escapeHtml(post.thumbnail)}" alt="" loading="lazy" />` : ""}
+                <span class="post-body">
+                  <span class="post-title">${escapeHtml(post.title)}</span>
+                  <p>${escapeHtml(post.excerpt)}</p>
+                  <span class="post-meta">${Medium.formatDate(post.date)} · ${post.readMins} min read${tags ? `<span class="post-tags">· ${tags}</span>` : ""}</span>
+                </span>
+              </a>
+            `;
+            list.appendChild(li);
+          });
+          document.getElementById("postMore").hidden = false;
         })
         .catch(() => {
+          document.getElementById("postLoading").hidden = true;
           document.getElementById("postEmpty").hidden = false;
         });
     </script>
