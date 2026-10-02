@@ -7,11 +7,7 @@
  * >>> Set your Medium username below (without the @). <<<
  */
 (function () {
-<<<<<<< HEAD
   const MEDIUM_USER = "niranjanrao13";
-=======
-  const MEDIUM_USER = "niranjan-rao";
->>>>>>> ccb442678f197cac7b92558644ecaf092939e09f
 
   const PROFILE_URL = `https://medium.com/@${MEDIUM_USER}`;
   const FEED_URL = `https://medium.com/feed/@${MEDIUM_USER}`;
