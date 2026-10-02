@@ -36,289 +36,16 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="assets/theme.css" />
-    <style>
-      .page {
-        width: min(1040px, 92vw);
-        margin: 4.5rem auto 5rem;
-      }
-
-      .top {
-        padding: 0;
-      }
-
-      .identity {
-        margin: 0;
-        font-size: clamp(2.1rem, 5vw, 2.9rem);
-        line-height: 1.05;
-        letter-spacing: 0.01em;
-      }
-
-      .subtitle {
-        margin: 0.85rem 0 0;
-        color: var(--muted);
-        max-width: 34rem;
-        font-size: 1.02rem;
-        line-height: 1.6;
-      }
-
-      .tabs {
-        margin-top: 2.25rem;
-        display: flex;
-        gap: 1.75rem;
-        flex-wrap: wrap;
-        border-bottom: 1px solid var(--line);
-      }
-
-      .tab {
-        border: none;
-        border-bottom: 2px solid transparent;
-        background: none;
-        color: var(--muted);
-        padding: 0 0 0.85rem;
-        margin-bottom: -1px;
-        font-family: inherit;
-        font-size: 0.85rem;
-        font-weight: 700;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        cursor: pointer;
-        transition: color 0.15s ease, border-color 0.15s ease;
-      }
-
-      .tab:hover {
-        color: var(--ink);
-      }
-
-      .tab.active {
-        color: var(--ink);
-        border-bottom-color: var(--accent);
-      }
-
-      .theme-toggle {
-        margin-left: auto;
-        background: none;
-        border: none;
-        color: var(--muted);
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
-        padding: 0 0 0.85rem;
-        font-size: 0.85rem;
-        font-weight: 700;
-        text-transform: none;
-      }
-
-      .theme-toggle:hover {
-        color: var(--ink);
-      }
-
-      .content {
-        padding: 2.5rem 0 0;
-      }
-
-      .panel {
-        display: none;
-        animation: rise 0.35s ease;
-      }
-
-      .panel.active {
-        display: block;
-      }
-
-      @keyframes rise {
-        from {
-          opacity: 0;
-          transform: translateY(8px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      h2 {
-        margin: 0;
-        font-size: clamp(1.3rem, 2.6vw, 1.6rem);
-      }
-
-      .about-grid {
-        margin-top: 1.75rem;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1.75rem;
-      }
-
-      .card {
-        border-left: 3px solid var(--accent);
-        padding: 0 0 0 1rem;
-      }
-
-      .card h3 {
-        margin: 0 0 0.5rem;
-        font-size: 0.75rem;
-        font-weight: 800;
-        letter-spacing: 0.09em;
-        text-transform: uppercase;
-        color: var(--accent);
-      }
-
-      .tagline {
-        margin-top: 1.75rem;
-        display: inline-block;
-        border-left: 2px solid var(--accent);
-        padding-left: 0.85rem;
-        color: var(--ink);
-        font-weight: 700;
-        font-size: 0.92rem;
-      }
-
-      .cv-frame {
-        margin-top: 1rem;
-        width: 100%;
-        min-height: 72vh;
-        border: 1px solid var(--line);
-        border-radius: 6px;
-        background: var(--cv-frame-bg);
-      }
-
-      .cv-note {
-        margin-top: 0.9rem;
-        font-size: 0.95rem;
-      }
-
-      .project-list {
-        margin: 1.5rem 0 0;
-        padding: 0;
-        list-style: none;
-        display: flex;
-        flex-direction: column;
-      }
-
-      .project {
-        border-top: 1px solid var(--line);
-        padding: 1.15rem 0;
-      }
-
-      .project:last-child {
-        border-bottom: 1px solid var(--line);
-      }
-
-      .project a {
-        color: var(--ink);
-        text-decoration: none;
-        font-family: "Fraunces", serif;
-        font-weight: 600;
-        font-size: 1.08rem;
-      }
-
-      .project a:hover {
-        color: var(--accent);
-        text-decoration: underline;
-      }
-
-      .project p {
-        margin: 0.4rem 0 0;
-      }
-
-      .post-list {
-        margin: 1.5rem 0 0;
-        padding: 0;
-        list-style: none;
-        display: flex;
-        flex-direction: column;
-      }
-
-      .post {
-        border-top: 1px solid var(--line);
-        padding: 1.15rem 0;
-      }
-
-      .post:last-child {
-        border-bottom: 1px solid var(--line);
-      }
-
-      .post a {
-        color: var(--ink);
-        text-decoration: none;
-        font-family: "Fraunces", serif;
-        font-weight: 600;
-        font-size: 1.08rem;
-      }
-
-      .post a:hover {
-        color: var(--accent);
-        text-decoration: underline;
-      }
-
-      .post p {
-        margin: 0.4rem 0 0;
-      }
-
-      .post-meta {
-        margin-top: 0.5rem;
-        font-size: 0.82rem;
-        color: var(--muted);
-      }
-
-      .post-empty {
-        margin-top: 1.5rem;
-      }
-
-      footer {
-        margin-top: 3rem;
-        padding-top: 1.5rem;
-        border-top: 1px solid var(--line);
-        color: var(--muted);
-        font-size: 0.92rem;
-      }
-
-      footer a {
-        color: var(--ink);
-      }
-
-      @media (max-width: 640px) {
-        .about-grid {
-          grid-template-columns: 1fr;
-          gap: 1.25rem;
-        }
-
-        .cv-frame {
-          min-height: 64vh;
-        }
-      }
-      /* Theme overrides (light/dark) */
-      :root {
-        --bg: #ffffff;
-      }
-
-      html[data-theme="dark"] {
-        --bg: #071018;
-        --ink: #e6eef8;
-        --muted: #9aa6b2;
-        --line: rgba(255,255,255,0.06);
-        --accent: #7bd389;
-        --cv-frame-bg: #0b1620;
-      }
-
-      body {
-        background: var(--bg);
-        color: var(--ink);
-      }
-    </style>
+    <script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
   </head>
   <body>
     <div class="page">
-      <header class="top">
-        <h1 class="identity">Niranjan Arun Rao</h1>
-        <p class="subtitle">
-          I am a data scientist who loves to apply contemporary research to business problems and bring impact at scale. I occasionaly write here. 
-        </p>
-
+      <header class="topbar">
+        <a class="wordmark" href="#about" data-goto="about">Niranjan Arun Rao</a>
         <nav class="tabs" aria-label="Primary">
           <button class="tab active" data-tab="about">About</button>
           <button class="tab" data-tab="cv">CV</button>
@@ -330,7 +57,25 @@
 
       <main class="content">
           <article id="about" class="panel active">
-            <h2>About</h2>
+            <section class="hero">
+              <div class="hero-text">
+                <!-- <p class="eyebrow">Data scientist &middot; Occasional writer</p> -->
+                <h1 class="identity">Hi, I'm <em>Niranjan.</em></h1>
+                <p class="lede">
+                  I love applying contemporary research to business problems and bringing impact at scale. I occasionally write here.
+                </p>
+                <div class="cta">
+                  <a class="btn" href="#blog" data-goto="blog">Read my writing</a>
+                  <a class="btn ghost" href="#cv" data-goto="cv">View CV</a>
+                </div>
+              </div>
+              <figure class="portrait">
+                <img src="assets/niranjan.jpg" width="900" height="1125" fetchpriority="high"
+                  alt="Niranjan smiling on a green hilltop above a misty lake and mountains" />
+              </figure>
+            </section>
+
+            <div class="about-body">
             <p>
               I work at Target, a Fortune 50 retail giant, and have been part of several high-impact projects over the course of the past 3 years.
               I designed and built an optimization engine to reduce purchase order cost - read about it here.<br>
@@ -354,10 +99,11 @@
             </div>
 
             <span class="tagline">Open to collaboration on ML/AI projects</span>
+            </div>
           </article>
 
           <article id="cv" class="panel">
-            <h2>CV</h2>
+            <h2 class="section-title">CV</h2>
             <p>
               The CV is embedded below. If your browser cannot render it,
               download the file using the link under the preview.
@@ -378,8 +124,20 @@
           </article>
 
           <article id="projects" class="panel">
-            <h2>Projects</h2>
+            <h2 class="section-title">Projects</h2>
             <ul class="project-list">
+              <li class="project">
+                <a
+                  href="https://github.com/niranjanrao13/iPinYou-RTB"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  Optimal Real-Time Bidding for Display Advertising
+                </a>
+                <p>
+                  Benchmarking several bidding strategies to obtain the best possible way to maximize clicks while managing budgets on real advertising data from the iPinYou Display Advertising Challenge, 2013. 
+                </p>
+              </li>
               <li class="project">
                 <a
                   href="https://github.com/niranjanrao13/Infrared-Image-Colorization-using-Deep-Neural-Networks"
@@ -435,10 +193,15 @@
           </article>
 
           <article id="blog" class="panel">
-            <h2>Blog</h2>
+            <h2 class="section-title">Blog</h2>
+            <p class="post-empty" id="postLoading">Loading posts from Medium…</p>
             <ul class="post-list" id="postList"></ul>
             <p class="post-empty" id="postEmpty" hidden>
-              No posts yet — check back soon.
+              Couldn't load posts right now. You can read them directly on
+              <a id="mediumProfile" href="#" target="_blank" rel="noopener">Medium</a>.
+            </p>
+            <p class="post-empty" id="postMore" hidden>
+              More on <a id="mediumProfile2" href="#" target="_blank" rel="noopener">Medium</a>.
             </p>
           </article>
 
@@ -456,6 +219,7 @@
       </main>
     </div>
 
+    <script src="assets/medium.js"></script>
     <script>
       const tabs = document.querySelectorAll(".tab");
       const panels = document.querySelectorAll(".panel");
@@ -469,6 +233,15 @@
           panel.classList.toggle("active", panel.id === tabId);
         });
       }
+
+      document.querySelectorAll("[data-goto]").forEach((el) => {
+        el.addEventListener("click", (e) => {
+          e.preventDefault();
+          showTab(el.dataset.goto);
+          history.replaceState(null, "", `#${el.dataset.goto}`);
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+      });
 
       tabs.forEach((tab) => {
         tab.addEventListener("click", (e) => {
@@ -509,40 +282,40 @@
         );
       }
 
-      function formatDate(iso) {
-        const d = new Date(iso);
-        if (Number.isNaN(d.getTime())) return iso;
-        return d.toLocaleDateString(undefined, {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-        });
-      }
+      document.getElementById("mediumProfile").href = Medium.PROFILE_URL;
+      document.getElementById("mediumProfile2").href = Medium.PROFILE_URL;
 
-      fetch("assets/blog/posts/index.json", { cache: "no-store" })
-        .then((res) => (res.ok ? res.json() : []))
+      Medium.loadPosts()
         .then((posts) => {
           const list = document.getElementById("postList");
-          const empty = document.getElementById("postEmpty");
-          if (!Array.isArray(posts) || posts.length === 0) {
-            empty.hidden = false;
+          document.getElementById("postLoading").hidden = true;
+          if (posts.length === 0) {
+            document.getElementById("postEmpty").hidden = false;
             return;
           }
-          posts
-            .slice()
-            .sort((a, b) => new Date(b.date) - new Date(a.date))
-            .forEach((post) => {
-              const li = document.createElement("li");
-              li.className = "post";
-              li.innerHTML = `
-                <a href="blog/post.html?slug=${encodeURIComponent(post.slug)}">${escapeHtml(post.title)}</a>
-                <p>${escapeHtml(post.excerpt || "")}</p>
-                <div class="post-meta">${formatDate(post.date)} · ${post.readMins || 1} min read</div>
-              `;
-              list.appendChild(li);
-            });
+          posts.forEach((post) => {
+            const li = document.createElement("li");
+            li.className = "post";
+            const tags = post.categories
+              .slice(0, 3)
+              .map(escapeHtml)
+              .join(" · ");
+            li.innerHTML = `
+              <a class="post-link" href="blog/post.html?id=${encodeURIComponent(post.id)}">
+                ${post.thumbnail ? `<img class="post-thumb" src="${escapeHtml(post.thumbnail)}" alt="" loading="lazy" />` : ""}
+                <span class="post-body">
+                  <span class="post-title">${escapeHtml(post.title)}</span>
+                  <p>${escapeHtml(post.excerpt)}</p>
+                  <span class="post-meta">${Medium.formatDate(post.date)} · ${post.readMins} min read${tags ? `<span class="post-tags">· ${tags}</span>` : ""}</span>
+                </span>
+              </a>
+            `;
+            list.appendChild(li);
+          });
+          document.getElementById("postMore").hidden = false;
         })
         .catch(() => {
+          document.getElementById("postLoading").hidden = true;
           document.getElementById("postEmpty").hidden = false;
         });
     </script>
